@@ -50,7 +50,7 @@ float state::get_cost()
 
 	for(std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); i++)
 	{
-		state_cost += ((i -> second).size() - 1)*collision_cost; // cost of collision
+		state_cost -= ((i -> second).size() - 1)*collision_cost; // subtracting cost of collision
 	}
 
 	return state_cost;
