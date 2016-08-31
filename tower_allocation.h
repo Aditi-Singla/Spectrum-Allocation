@@ -53,3 +53,6 @@ class allocate
 		void input();
 		void output(state output_state);
 };
+
+std::map<int,bid> bid_map;
+std::map<int,company> bid_company;
