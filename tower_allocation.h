@@ -15,7 +15,7 @@ class bid
 			company = -1;
 		}
 
-		void set_cost(float cost);
+		void set_cost(float cost_in);
 		void add_region(int reg_no);
 		void add_company(int c_id);
 };
@@ -32,12 +32,12 @@ class state
 {
 	public:
 		std::vector<int> list_of_bids;
-		std::map<int,bool> map;
+		std::map<int,bool> remaining_companies;
 
 		state(state& s)
 		{
 			list_of_bids = s.list_of_bids;
-			map = s.map;
+			remaining_companies = s.remaining_companies;
 		}
 
 		float get_cost();
@@ -56,3 +56,11 @@ class allocate
 
 std::map<int,bid> bid_map;
 std::map<int,company> bid_company;
+
+float collision_cost = 100; //TODO:some amount to tweak or infer
+
+float prob_swap = 0.3;
+float prob_add = 0.3;
+float prob_delete = 0.3;
+
+float prob_restart = 0.1;
