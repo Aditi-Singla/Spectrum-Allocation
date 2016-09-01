@@ -58,7 +58,7 @@ class allocate
 		state best_state;
 		state get_start_state();
 		void search(float time,state start_state);
-		void remove_collision(state input_state);
+		state remove_collision(state input_state);
 		void input();
 		void output(state output_state);
 

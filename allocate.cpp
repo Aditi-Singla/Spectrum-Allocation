@@ -201,3 +201,124 @@ void allocate::search(float inp_time, state start_state)
 		}
 	}
 }
+
+state allocate::remove_collision(state input_state)
+{
+	std::map<int, std::vector<int> > map; // region,list of bids
+
+	for (std::vector<int>::iterator i = input_state.list_of_bids.begin(); i != input_state.list_of_bids.end(); ++i)
+	{
+		for (std::vector<int>::iterator j = bid_map[*i].set_of_regions.begin(); j != bid_map[*i].set_of_regions.end(); ++j)
+		{
+			map[*j].push_back(*i); // to determine total number of collisions
+		}
+	}
+
+	for (std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); ++i)
+	{
+		int min_collision = 0;
+		int min_served = 0;
+		int min_bid_id = 0;
+
+		if ((i -> second).size() > 1) // if 2 or more regions collide
+		{
+			for (std::vector<int>::iterator j = map[i->first].begin(); j != map[i->first].end(); ++j)
+			{
+				int count = 0; int served = 0;
+
+				for (std::vector<int>::iterator k = bid_map[*j].set_of_regions.begin(); k != bid_map[*j].set_of_regions.end(); ++k)
+				{
+					if (map[*k].size() > 1)
+					{
+						count++;
+					}
+					else if(map[*k].size() == 1)
+					{
+						served++;
+					}
+				}
+
+				if (count < min_collision)
+				{
+					min_bid_id = *j;
+					min_collision = count;
+					min_served = served;
+				}
+				else if (count == min_collision)
+				{
+					if (served < min_served)
+					{
+						min_bid_id = *j;
+						min_collision = count;
+						min_served = served;
+					}
+				}
+
+			}
+		}
+
+		map[i -> first].clear();
+		map[i -> first].push_back(min_bid_id);
+	}
+
+	state final_state;
+
+	std::map<int, bool> comp_incl;
+
+	for (std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); ++i)
+	{
+		if (map[i -> first].size() != 0)
+		{
+			int temp = map[i -> first].back(); // getting the bid id
+
+			std::vector<int>::iterator it;
+
+			it = find (final_state.list_of_bids.begin(), final_state.list_of_bids.end(), temp);
+			
+			if (it == final_state.list_of_bids.end())
+				final_state.list_of_bids.push_back(temp);
+
+			comp_incl[bid_map[temp].company] = true;
+		}
+	}
+
+	for (std::map<int, company >::iterator i = bid_company.begin(); i != bid_company.end(); ++i)
+	{
+		if (comp_incl.find(i -> first) == comp_incl.end())
+		{
+			// company not included in bidding
+			// we will try and include some bids
+			float max_cost = 0;
+			int max_bid_id = 0;
+			bool found = false;
+
+			for (std::vector<int>::iterator j = bid_company[i -> first].list_of_bids.begin(); j != bid_company[i -> first].list_of_bids.end(); ++j)
+			{
+				bool flag = true;
+
+				for (std::vector<int>::iterator ii = bid_map[*j].set_of_regions.begin(); ii != bid_map[*j].set_of_regions.end(); ++ii)
+				{
+					if (map[*j].size() != 0)
+					{
+						flag = false;
+					}	
+				}
+
+				if(flag)
+				{
+					if (bid_map[*j].cost > max_cost)
+					{
+						max_cost = bid_map[*j].cost;
+						max_bid_id = *j;
+						found = true;
+					}
+				}
+			}
+
+			if(found)
+				final_state.list_of_bids.push_back(max_bid_id); // select the bid
+		}
+	}
+
+	return final_state;
+}
