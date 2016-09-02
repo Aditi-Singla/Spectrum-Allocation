@@ -6,6 +6,7 @@
 #include <ctime>
 #include <algorithm>
 #include <string>
+#define max 10000
 
 class bid
 {
