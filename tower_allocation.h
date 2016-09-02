@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <string>
 
 class bid
 {
@@ -58,7 +59,7 @@ class allocate
 		state best_state;
 		state get_start_state();
 		void search(float time,state start_state);
-		void remove_collision(state input_state);
+		state remove_collision(state input_state);
 		void input();
 		void output(state output_state);
 
@@ -83,6 +84,7 @@ float prob_restart = 0.1;
 
 float time_fact = 0.8;
 
+float input_time = 0;
 int no_of_bids = 0; // TODO: Check default initialization
 int no_of_companies = 0; // TODO: Check default initialization
 int no_of_regions = 0; // TODO: Check default initialization
