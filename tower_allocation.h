@@ -6,6 +6,8 @@
 #include <ctime>
 #include <algorithm>
 #include <string>
+#include <limits.h>
+#include <random>
 #define max 10000
 
 class bid
@@ -61,6 +63,8 @@ class allocate
 		state best_state;
 		state get_start_state();
 		void search(float time,state start_state);
+		void greedy_search(float time,state start_state);
+		void greedy_random_search(float time,state start_state);
 		state remove_collision(state input_state);
 		void input();
 		void output(state output_state);
@@ -90,3 +94,4 @@ extern float input_time;
 extern int no_of_bids; // TODO: Check default initialization
 extern int no_of_companies; // TODO: Check default initialization
 extern int no_of_regions; // TODO: Check default initialization
+extern std::map<int,bid>::iterator mit;

@@ -3,13 +3,13 @@
 std::map<int,bid> bid_map;
 std::map<int,company> bid_company;
 
-float collision_cost = 100; //TODO:some amount to tweak or infer
+float collision_cost = INT_MAX; //TODO:some amount to tweak or infer
 
-float prob_swap = 0;
-float prob_add = 0.45;
-float prob_delete = 0.45;
+float prob_swap = 0.35;
+float prob_add = 0.65;
+float prob_delete = 0;
 
-float prob_restart = 0.1;
+float prob_restart = 0;
 
 float time_fact = 0.8;
 
@@ -60,16 +60,16 @@ float state::get_cost()
 	{
 		state_cost+=bid_map[*i].cost; // add bid selection cost
 
-		for (std::vector<int>::iterator j = bid_map[*i].set_of_regions.begin(); j != bid_map[*i].set_of_regions.end(); ++j)
-		{
-			map[*j].push_back(*i); // to determine total number of collisions
-		}
+		// for (std::vector<int>::iterator j = bid_map[*i].set_of_regions.begin(); j != bid_map[*i].set_of_regions.end(); ++j)
+		// {
+		// 	map[*j].push_back(*i); // to determine total number of collisions
+		// }
 	}
 
-	for(std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); i++)
-	{
-		state_cost -= ((i -> second).size() - 1)*collision_cost; // subtracting cost of collision
-	}
+	// for(std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); i++)
+	// {
+	// 	state_cost -= ((i -> second).size() - 1)*collision_cost; // subtracting cost of collision
+	// }
 
 	return state_cost;
 }

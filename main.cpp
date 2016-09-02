@@ -1,9 +1,15 @@
 #include "tower_allocation.h"
 using namespace std;
 
+std::map<int,bid>::iterator mit;
+
 int main(){
 	allocate a;
 	a.input();
+
+	// std::srand(std::time(0));
+	std::srand(std::time(NULL));
+	::mit = bid_map.begin();
 
 	std::cout << "input taken\n"; 
 	std::cout << bid_map.size() << ":map size" << std::endl;
@@ -26,9 +32,11 @@ int main(){
 		std::cout<<std::endl;
 	}
 
+	std::cout << "inp_time:" <<input_time * time_fact<< std::endl;
 	state initial_state = a.get_start_state();
 	std::cout << "start state taken\n";
-	a.search(input_time,initial_state);
+	// a.greedy_search(input_time,initial_state);
+	a.greedy_random_search(input_time,initial_state);
 	std::cout << "searched\n";
 	a.output(a.remove_collision(a.best_state)); 
 
