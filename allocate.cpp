@@ -362,14 +362,53 @@ void allocate::input()
 				return;
 			}
 			else{
-				in >> temp;
-				vector<string> l = split(temp, ' ');
 				bid *b;
-				int c_id = stoi(l.at(0));
+				string ch;
+				in >> ch;
+				int t=0;int j=0;
+				char ch1[max];
+				while(ch[t]!=' ')
+				{
+					ch1[j]=ch[t];
+					j++;t++;
+				}
+				
+				ch1[j]='\0';
+				
+				int c_id = atoi(ch1);
 				b->add_company(c_id);
-				b->set_cost(stof(l.at(1)));
-				for (int j=2; j<l.size()-1; j++){
-					b->add_region(stof(l.at(j)));
+
+				ch1[0]='\0';j=0;t++;
+				while(ch[t]!=' ')
+				{
+					ch1[j]=ch[t];
+					j++;t++;
+				}
+				ch1[j]='\0';
+
+				b->set_cost(strtod (ch1, NULL));
+				t++;
+				
+				int x=0;
+				int w=t;		
+				while(ch[t]!='#')
+				{
+					if(ch[t]==' ')
+					{	x++;}
+					t++;
+				}
+				t=w;
+				for(int qq=0;qq<x;qq++)
+				{
+					ch1[0]='\0';j=0;
+					while(ch[t]!=' ')
+					{
+						ch1[j]=ch[t];
+						j++;t++;
+					}
+					t++;
+					ch1[j]='\0';
+					b->add_region(atoi(ch1));
 				}
 				bid_map.insert(std::pair<int,bid>(i,*b));
 				if (bid_company.find(c_id) == bid_company.end()){
