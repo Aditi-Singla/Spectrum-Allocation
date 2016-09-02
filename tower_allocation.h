@@ -19,6 +19,7 @@ class bid
 		{
 			cost = 0;
 			company = -1;
+			// std::cout << "new bid\n";
 		}
 
 		void set_cost(float cost_in);
@@ -45,7 +46,7 @@ class state
 
 		}
 
-		state(state& s)
+		state(const state &s)
 		{
 			list_of_bids = s.list_of_bids; // TODO: Check for shallow or deep copy
 			remaining_companies = s.remaining_companies;
@@ -72,20 +73,20 @@ class allocate
 
 float random_fraction();
 
-std::map<int,bid> bid_map;
-std::map<int,company> bid_company;
+extern std::map<int,bid> bid_map;
+extern std::map<int,company> bid_company;
 
-float collision_cost = 100; //TODO:some amount to tweak or infer
+extern float collision_cost; //TODO:some amount to tweak or infer
 
-float prob_swap = 0.3;
-float prob_add = 0.3;
-float prob_delete = 0.3;
+extern float prob_swap;
+extern float prob_add;
+extern float prob_delete;
 
-float prob_restart = 0.1;
+extern float prob_restart;
 
-float time_fact = 0.8;
+extern float time_fact;
 
-float input_time = 0;
-int no_of_bids = 0; // TODO: Check default initialization
-int no_of_companies = 0; // TODO: Check default initialization
-int no_of_regions = 0; // TODO: Check default initialization
+extern float input_time;
+extern int no_of_bids; // TODO: Check default initialization
+extern int no_of_companies; // TODO: Check default initialization
+extern int no_of_regions; // TODO: Check default initialization

@@ -9,3 +9,7 @@ main.o: main.cpp tower_allocation.h
 
 helpers.o: helpers.cpp tower_allocation.h
 	g++ -c helpers.cpp
+
+clean:
+	rm -rf output
+	rm -rf *.o

@@ -6,33 +6,51 @@ using namespace std;
 
 float random_fraction()
 {
-	std::srand(std::time(0)); // use current time as seed for random generator
+	// std::srand(std::time(0)); // use current time as seed for random generator
     int random_variable = std::rand();
-    float ans = random_variable/RAND_MAX;
+    float ans = (float)random_variable/(float)RAND_MAX;
+
+    std::cout << "random::"<<ans<<"\n";
     return ans;
+}
+
+void output_state_details(state s)
+{
+	std::cout << "Cost: " << s.get_cost() << "\n";
+
+	for (std::vector<int>::iterator i = s.list_of_bids.begin(); i != s.list_of_bids.end(); ++i)
+	{
+		std::cout<<*i<<" ";
+	}
+
+	std::cout << std::endl;
 }
 
 state allocate::get_start_state()
 {
 	state new_state;
 
-	int loop_max = (int)(random_fraction()*(no_of_companies -1));
+	// std::srand(0);
+
+	int loop_max = (int)(random_fraction()*((float)(no_of_companies -1)));
+	std::cout<<"noc::"<<no_of_companies-1<<"\n";
+	std::cout<<"loopmax::"<<loop_max<<"\n";
 
 	std::map<int, bool> map; // to check whether a company has occurred
 
 	for (int i = 0; i <= loop_max; ++i) // to fix a random no. of companies
 	{
 		int num = (int)(random_fraction()*(no_of_companies -1));
-
+		std::cout<<"num:"<<num<<"\n";
 		while(map.find(num) != map.end())
 		{
 			num = (int)(random_fraction()*(no_of_companies -1));
 		}
-
+		std::cout<<"yo\n";
 		map[num] = false;
 
 		int bid_num = (int)(random_fraction()*(bid_company[num].list_of_bids.size()-1));
-
+		std::cout<<"bidnum:"<<bid_num<<" "<<bid_company[num].list_of_bids.size()<<"\n";
 		new_state.list_of_bids.push_back(bid_company[num].list_of_bids[bid_num]);
 	}
 
@@ -54,18 +72,22 @@ void allocate::search(float inp_time, state start_state)
 {
 	state current = start_state; //initially
 
+	output_state_details(start_state);
+
 	time_t start = time(0);
 
 	// double seconds_since_start = difftime( time(0), start);
 
-	while(difftime(time(0), start) <= time_fact * inp_time) // TODO: Check for time elapsed
+	while(/*difftime(time(0), start) <= time_fact * inp_time*/ true ) // TODO: Check for time elapsed
 	{
+		std::cout<<"diff: "<<difftime(time(0), start)<<"\n";
 		float fract = random_fraction();
 
 		if (fract <= prob_swap)
 		{
 			// code for swap
 			// for the time being the swap is from an open company to itself
+			std::cout<<"SWAP:\n";
 			state newstate = current;
 			bool done = false;
 
@@ -75,7 +97,7 @@ void allocate::search(float inp_time, state start_state)
 
 				int comp_id = bid_map[*i].company;
 
-				for (std::vector<int>::iterator j = bid_company[comp_id].list_of_bids.begin(); j != bid_company[comp_id].list_of_bids.end() && difftime( time(0), start) <= time_fact * inp_time; ++j)
+				for (std::vector<int>::iterator j = bid_company[comp_id].list_of_bids.begin(); j != bid_company[comp_id].list_of_bids.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
 				{
 					if(*i != *j)
 					{
@@ -117,24 +139,26 @@ void allocate::search(float inp_time, state start_state)
 		else if (fract <= prob_swap+prob_add && fract > prob_swap)
 		{
 			// code for add
-
+			std::cout<<"ADD:\n";
 			state newstate = current;
 			bool done = false;
-
-			for (std::vector<int>::iterator i = current.remaining_companies.begin(); i != current.remaining_companies.end() && difftime( time(0), start) <= time_fact * inp_time; ++i)
+			std::cout<<"done1\n";
+			for (std::vector<int>::iterator i = current.remaining_companies.begin(); i != current.remaining_companies.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++i)
 			{
 				// newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), *i), newstate.list_of_bids.end());	
 
 				int comp_id = *i;
-
-				for (std::vector<int>::iterator j = bid_company[comp_id].list_of_bids.begin(); j != bid_company[comp_id].list_of_bids.end() && difftime( time(0), start) <= time_fact * inp_time; ++j)
+				std::cout<<"done2\n";
+				for (std::vector<int>::iterator j = bid_company[comp_id].list_of_bids.begin(); j != bid_company[comp_id].list_of_bids.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
 				{
 					// if(*i != *j)
 					// {
 						newstate.list_of_bids.push_back(*j);
 						if (newstate.get_cost() >= current.get_cost())
 						{
-							newstate.remaining_companies.erase(std::remove(newstate.remaining_companies.begin(), newstate.remaining_companies.end(), comp_id), newstate.list_of_bids.end());	
+							std::cout<<newstate.remaining_companies.size()<<"\n";
+							newstate.remaining_companies.erase(std::remove(newstate.remaining_companies.begin(), newstate.remaining_companies.end(), comp_id), newstate.remaining_companies.end());	
+							std::cout<<"done3\n";
 							current = newstate;
 							done = true;
 							break;
@@ -142,6 +166,7 @@ void allocate::search(float inp_time, state start_state)
 						else
 						{
 							newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), (*j)), newstate.list_of_bids.end());	
+							std::cout<<"done4\n";
 						}
 					// }
 				}
@@ -165,11 +190,11 @@ void allocate::search(float inp_time, state start_state)
 		else if (fract <= prob_swap+prob_add+prob_delete && fract > prob_swap+prob_add)
 		{
 			// code for delete
-
+			std::cout<<"DELETE:\n";
 			state newstate = current;
 			bool done = false;
 
-			for (std::vector<int>::iterator i = current.list_of_bids.begin(); i != current.list_of_bids.end() && difftime( time(0), start) <= time_fact * inp_time; ++i)
+			for (std::vector<int>::iterator i = current.list_of_bids.begin(); i != current.list_of_bids.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++i)
 			{
 				newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), (*i)), newstate.list_of_bids.end());	
 
@@ -203,6 +228,11 @@ void allocate::search(float inp_time, state start_state)
 			// random restart
 			current = get_start_state();	
 		}
+
+		std::cout<<"best\n";
+		output_state_details(best_state);
+		std::cout<<"current\n";
+		output_state_details(current);
 	}
 }
 
@@ -339,11 +369,14 @@ std::vector<string> split(string str, char delimiter)
 
 void allocate::input()
 {
-	string temp,temp1,temp2,temp3;
+	string temp,temp1,temp2,temp3,line;
 	int no_of_regions, no_of_bids, no_of_companies;
 	int k = 0;
 	ifstream in;
-	in.open("1.txt");
+	in.open("../A1/A1/benchmarks/1.txt");
+
+	std::cout << "file opened\n";
+
 	if (!in.is_open()){
 		cout << "File not found.\n";
 	}
@@ -351,111 +384,115 @@ void allocate::input()
 		in >> temp;
 		int t=0;int j=0;
 		char ch11[max];
+
+		std::cout << "here1\n";
+
 		while (temp[t]!='\0')
 		{
 			ch11[j]=temp[t];
 			j++;t++;
 		}
 		ch11[j]='\0';
-		input_time = (strtod (ch11, NULL));
+		::input_time = (strtod (ch11, NULL));
+		// input_time = (strtod (ch11, NULL));
+		std::cout << "here2\n";
 		
 		in >> temp1;
 		t = 0;
 		j = 0;
 		char ch12[max];
-		while(temp1[t]!=' ')
+		while(temp1[t]!='\0')
 		{
 			ch12[j]=temp1[t];
 			j++;t++;
 		}
 		ch12[j]='\0';
+		::no_of_regions = atoi(ch12);
 		no_of_regions = atoi(ch12);
 		
 		in >> temp2;
 		t = 0;
 		j = 0;
+
+		std::cout << "here3\n";
+
 		char ch13[max];
-		while(temp2[t]!=' ')
+		while(temp2[t]!='\0')
 		{
 			ch13[j]=temp2[t];
 			j++;t++;
 		}
 		ch13[j]='\0';
+		::no_of_bids = atoi(ch13);
 		no_of_bids = atoi(ch13);
 		
+		std::cout << "here4\n";
+
 		in >> temp3;
-		stoi(temp);
 		t = 0;
 		j = 0;
 		char ch14[max];
-		while(temp3[t]!=' ')
+		while(temp3[t]!='\0')
 		{
 			ch14[j]=temp3[t];
 			j++;t++;
 		}
 		ch14[j]='\0';
+		::no_of_companies = atoi(ch14);
 		no_of_companies = atoi(ch14);
 		
-		for (int i=0; i<no_of_bids; i++){
+		std::cout << "here5\n";
+
+		for (int ii=0; ii<no_of_bids; ii++){
 			if (k >= no_of_companies){
 				cout << "Invalid Input. \n";
 				return;
 			}
 			else{
-				bid *b;
-				string ch;
-				in >> ch;
-				int t=0;int j=0;
-				char ch1[max];
-				while(ch[t]!=' ')
-				{
-					ch1[j]=ch[t];
-					j++;t++;
-				}
+				bid *b = new bid();
 				
-				ch1[j]='\0';
-				
-				int c_id = atoi(ch1);
+				int c_id; 
+				in >> c_id;
+
+				float cost;
+				in >> cost;
+
 				b->add_company(c_id);
-
-				ch1[0]='\0';j=0;t++;
-				while(ch[t]!=' ')
-				{
-					ch1[j]=ch[t];
-					j++;t++;
-				}
-				ch1[j]='\0';
-
-				b->set_cost(strtod (ch1, NULL));
-				t++;
+				b->set_cost(cost);
 				
-				int x=0;
-				int w=t;		
-				while(ch[t]!='#')
+				char c;
+				in.get(c);
+
+				string a;
+				getline(in, a);
+				//cout<< "!" << a << "!";
+
+				char ch[max];
+				int i=0;int j =0;
+				while(a[i] != ('#'))
 				{
-					if(ch[t]==' ')
-					{	x++;}
-					t++;
-				}
-				t=w;
-				for(int qq=0;qq<x;qq++)
-				{
-					ch1[0]='\0';j=0;
-					while(ch[t]!=' ')
-					{
-						ch1[j]=ch[t];
-						j++;t++;
+					while (a[i] != ' '){
+						ch[j] = a[i];
+						i++;j++;
 					}
-					t++;
-					ch1[j]='\0';
-					b->add_region(atoi(ch1));
+					ch[j] = '\0';
+					b->add_region(atoi(ch));
+					i++;
+					j = 0;
 				}
-				bid_map.insert(std::pair<int,bid>(i,*b));
+				getline(in,line);
+				cout << "\n";
+				bid_map.insert(std::pair<int,bid>(ii,*b));
 				if (bid_company.find(c_id) == bid_company.end()){
-					company *c;
-					c->add_bid(i);
-					bid_company.insert(std::pair<int,company>(c_id,*c));
-					delete c;
+					company c;
+					c.add_bid(ii);
+					// bid_company.insert(std::pair<int,company>(c_id,*c));
+					bid_company[c_id] = c;
+					// delete c;
+				}
+				else
+				{
+					bid_company[c_id].add_bid(ii);
 				}
 				delete b;
 			}

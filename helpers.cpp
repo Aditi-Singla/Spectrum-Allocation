@@ -1,5 +1,23 @@
 #include "tower_allocation.h"
 
+std::map<int,bid> bid_map;
+std::map<int,company> bid_company;
+
+float collision_cost = 100; //TODO:some amount to tweak or infer
+
+float prob_swap = 0;
+float prob_add = 0.45;
+float prob_delete = 0.45;
+
+float prob_restart = 0.1;
+
+float time_fact = 0.8;
+
+float input_time = 0;
+int no_of_bids = 0; // TODO: Check default initialization
+int no_of_companies = 0; // TODO: Check default initialization
+int no_of_regions = 0; // TODO: Check default initialization
+
 /**
  * Function definition for bid class
  */
