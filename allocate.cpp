@@ -339,7 +339,7 @@ std::vector<string> split(string str, char delimiter)
 
 void allocate::input()
 {
-	string temp;
+	string temp,temp1,temp2,temp3;
 	int no_of_regions, no_of_bids, no_of_companies;
 	int k = 0;
 	ifstream in;
@@ -349,13 +349,53 @@ void allocate::input()
 	}
 	else{
 		in >> temp;
-		input_time = stoi(temp);
-		in >> temp;
-		no_of_regions = stoi(temp);
-		in >> temp;
-		no_of_bids = stoi(temp);
-		in >> temp;
-		no_of_companies = stoi(temp);
+		int t=0;int j=0;
+		char ch11[max];
+		while (temp[t]!='\0')
+		{
+			ch11[j]=temp[t];
+			j++;t++;
+		}
+		ch11[j]='\0';
+		input_time = (strtod (ch11, NULL));
+		
+		in >> temp1;
+		t = 0;
+		j = 0;
+		char ch12[max];
+		while(temp1[t]!=' ')
+		{
+			ch12[j]=temp1[t];
+			j++;t++;
+		}
+		ch12[j]='\0';
+		no_of_regions = atoi(ch12);
+		
+		in >> temp2;
+		t = 0;
+		j = 0;
+		char ch13[max];
+		while(temp2[t]!=' ')
+		{
+			ch13[j]=temp2[t];
+			j++;t++;
+		}
+		ch13[j]='\0';
+		no_of_bids = atoi(ch13);
+		
+		in >> temp3;
+		stoi(temp);
+		t = 0;
+		j = 0;
+		char ch14[max];
+		while(temp3[t]!=' ')
+		{
+			ch14[j]=temp3[t];
+			j++;t++;
+		}
+		ch14[j]='\0';
+		no_of_companies = atoi(ch14);
+		
 		for (int i=0; i<no_of_bids; i++){
 			if (k >= no_of_companies){
 				cout << "Invalid Input. \n";
