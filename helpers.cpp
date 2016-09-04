@@ -1,7 +1,7 @@
 #include "tower_allocation.h"
 
-std::map<int,bid> bid_map;
-std::map<int,company> bid_company;
+std::unordered_map<int,bid> bid_map;
+std::unordered_map<int,company> bid_company;
 
 float collision_cost = INT_MAX; //TODO:some amount to tweak or infer
 
@@ -54,7 +54,7 @@ float state::get_cost()
 {
 	float state_cost = 0;
 
-	std::map<int, std::vector<int> > map;
+	std::unordered_map<int, std::vector<int> > map;
 
 	for (std::vector<int>::iterator i = list_of_bids.begin(); i != list_of_bids.end(); ++i)
 	{
@@ -66,7 +66,7 @@ float state::get_cost()
 		// }
 	}
 
-	// for(std::map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); i++)
+	// for(std::unordered_map<int, std::vector<int> >::iterator i = map.begin(); i != map.end(); i++)
 	// {
 	// 	state_cost -= ((i -> second).size() - 1)*collision_cost; // subtracting cost of collision
 	// }

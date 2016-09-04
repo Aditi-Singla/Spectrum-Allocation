@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-// #include <unordered_map>
+#include <unordered_map>
 #include <fstream> // TODO: Check if necessary
 #include <cstdlib>
 #include <ctime>
@@ -43,7 +43,7 @@ class state
 {
 	public:
 		std::vector<int> list_of_bids;
-		std::vector<int>/*std::map<int,bool>*/ remaining_companies;
+		std::vector<int>/*std::unordered_map<int,bool>*/ remaining_companies;
 
 		state()
 		{
@@ -82,8 +82,8 @@ class allocate
 float random_fraction();
 state get_random_neighbour(state temp);
 
-extern std::map<int,bid> bid_map;
-extern std::map<int,company> bid_company;
+extern std::unordered_map<int,bid> bid_map;
+extern std::unordered_map<int,company> bid_company;
 
 extern float collision_cost; //TODO:some amount to tweak or infer
 
@@ -99,6 +99,6 @@ extern float input_time;
 extern int no_of_bids; // TODO: Check default initialization
 extern int no_of_companies; // TODO: Check default initialization
 extern int no_of_regions; // TODO: Check default initialization
-extern std::map<int,bid>::iterator mit;
+extern std::unordered_map<int,bid>::iterator mit;
 extern std::vector<int> bid_ids;
 extern std::vector<int>::iterator bid_it;

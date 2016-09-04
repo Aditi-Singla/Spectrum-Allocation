@@ -41,7 +41,7 @@ void output_state_details(state s)
 
 bool check_collision(std::vector<int> v,int new_bid)
 {
-	// std::map<int,bool> map;
+	// std::unordered_map<int,bool> map;
 
 	// if (new_bid >= 0)
 	// for (std::vector<int>::iterator i = bid_map[new_bid].set_of_regions.begin(); i != bid_map[new_bid].set_of_regions.end(); ++i)
@@ -86,7 +86,7 @@ bool check_collision(std::vector<int> v,int new_bid)
 	return true;
 }
 
-std::map<int,bool> start_state_occur;
+std::unordered_map<int,bool> start_state_occur;
 
 
 state allocate::get_start_state()
@@ -105,7 +105,7 @@ state allocate::get_start_state()
 	// 	std::cout<<"noc::"<<no_of_companies-1<<"\n";
 	// 	std::cout<<"loopmax::"<<loop_max<<"\n";
 
-		std::map<int, bool> map; // to check whether a company has occurred
+		std::unordered_map<int, bool> map; // to check whether a company has occurred
 
 		// for (int i = 0; i <= loop_max; ++i) // to fix a random no. of companies
 		// {
@@ -177,7 +177,7 @@ state allocate::get_random_state()
 		// std::cout<<"noc::"<<no_of_companies-1<<"\n";
 		// std::cout<<"loopmax::"<<loop_max<<"\n";
 
-		std::map<int, bool> map; // to check whether a company has occurred
+		std::unordered_map<int, bool> map; // to check whether a company has occurred
 
 		for (int i = 0; i <= loop_max; ++i) // to fix a random no. of companies
 		{
@@ -264,7 +264,7 @@ void allocate::greedy_search(float inp_time, state start_state)
 
 				int comp_id = bid_map[*i].company;
 				
-				for (std::map<int,bid>::iterator j = bid_map.begin(); j != bid_map.end() && (((j->second).company == comp_id) || (find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company) != current.remaining_companies.end())) /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
+				for (std::unordered_map<int,bid>::iterator j = bid_map.begin(); j != bid_map.end() && (((j->second).company == comp_id) || (find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company) != current.remaining_companies.end())) /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
 				{
 					std::vector<int>::iterator it = find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company);
 					if((*i != (j->first)) && (((j -> second).company == comp_id) || it != current.remaining_companies.end() ))
@@ -490,7 +490,7 @@ void allocate::greedy_random_search(float inp_time, state start_state)
 
 			// 	int comp_id = bid_map[*i].company;
 				
-			// 	for (std::map<int,bid>::iterator j = bid_map.begin(); (j != bid_map.end())/*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
+			// 	for (std::unordered_map<int,bid>::iterator j = bid_map.begin(); (j != bid_map.end())/*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
 			// 	{
 			// 		if((check_collision(newstate.list_of_bids,j->first)) && (((j->second).company == comp_id) || (find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company) != current.remaining_companies.end())) )
 			// 		{
@@ -993,7 +993,7 @@ void allocate::input()
 	int no_of_regions, no_of_bids, no_of_companies;
 	int k = 0;
 	ifstream in;
-	in.open("../A1/A1/benchmarks/3.txt");
+	in.open("../A1/A1/benchmarks/19.txt");
 
 	std::cout << "file opened\n";
 

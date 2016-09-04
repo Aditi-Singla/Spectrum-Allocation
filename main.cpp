@@ -1,7 +1,7 @@
 #include "tower_allocation.h"
 using namespace std;
 
-std::map<int,bid>::iterator mit;
+std::unordered_map<int,bid>::iterator mit;
 std::vector<int> bid_ids;
 std::vector<int>::iterator bid_it;
 
@@ -28,14 +28,14 @@ int main(){
 
 	std::cout << "input taken\n"; 
 	std::cout << bid_map.size() << ":map size" << std::endl;
-	for (std::map<int,bid>::iterator i = bid_map.begin(); i != bid_map.end(); ++i)
+	for (std::unordered_map<int,bid>::iterator i = bid_map.begin(); i != bid_map.end(); ++i)
 	{
 		std::cout<< i->first << ",yo\n";
 	}
 
 	std::cout << std::endl;
 
-	for (std::map<int,company>::iterator i = bid_company.begin(); i != bid_company.end(); ++i)
+	for (std::unordered_map<int,company>::iterator i = bid_company.begin(); i != bid_company.end(); ++i)
 	{
 		std::cout<< i->first << ":";
 
