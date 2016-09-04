@@ -5,13 +5,13 @@ std::map<int,company> bid_company;
 
 float collision_cost = INT_MAX; //TODO:some amount to tweak or infer
 
-float prob_swap = 0.35;
-float prob_add = 0.65;
+float prob_swap = 0.5;
+float prob_add = 0.499;
 float prob_delete = 0;
 
-float prob_restart = 0;
+float prob_restart = 0.001;
 
-float time_fact = 0.8;
+float time_fact = 0.9;
 
 float input_time = 0;
 int no_of_bids = 0; // TODO: Check default initialization

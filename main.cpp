@@ -2,6 +2,16 @@
 using namespace std;
 
 std::map<int,bid>::iterator mit;
+std::vector<int> bid_ids;
+std::vector<int>::iterator bid_it;
+
+struct compare
+{
+	bool operator() (const int& a, const int& b)
+	{
+		return (bid_map[a].cost/bid_map[a].set_of_regions.size()) < (bid_map[b].cost/bid_map[b].set_of_regions.size());
+	}
+};
 
 int main(){
 	allocate a;
@@ -10,6 +20,11 @@ int main(){
 	// std::srand(std::time(0));
 	std::srand(std::time(NULL));
 	::mit = bid_map.begin();
+
+	std::random_shuffle(bid_ids.begin(),bid_ids.end());
+	// std::sort(bid_ids.begin(),bid_ids.end(),compare());
+
+	bid_it = bid_ids.begin();
 
 	std::cout << "input taken\n"; 
 	std::cout << bid_map.size() << ":map size" << std::endl;
@@ -33,12 +48,15 @@ int main(){
 	}
 
 	std::cout << "inp_time:" <<input_time * time_fact<< std::endl;
-	state initial_state = a.get_start_state();
+	// state initial_state = a.get_start_state();
+	state initial_state = a.get_random_state();
 	std::cout << "start state taken\n";
 	// a.greedy_search(input_time,initial_state);
 	a.greedy_random_search(input_time,initial_state);
+	// a.sa_search(input_time,initial_state);
 	std::cout << "searched\n";
-	a.output(a.remove_collision(a.best_state)); 
+	// a.output(a.remove_collision(a.best_state));
+	a.output(a.best_state); 
 
 	return 0;
 }

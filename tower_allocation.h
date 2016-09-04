@@ -8,6 +8,7 @@
 #include <string>
 #include <limits.h>
 #include <random>
+#include <math.h>
 #define max 10000
 
 class bid
@@ -62,9 +63,11 @@ class allocate
 	public:
 		state best_state;
 		state get_start_state();
+		state get_random_state();
 		void search(float time,state start_state);
 		void greedy_search(float time,state start_state);
 		void greedy_random_search(float time,state start_state);
+		void sa_search(float time,state start_state);
 		state remove_collision(state input_state);
 		void input();
 		void output(state output_state);
@@ -76,6 +79,7 @@ class allocate
 };
 
 float random_fraction();
+state get_random_neighbour(state temp);
 
 extern std::map<int,bid> bid_map;
 extern std::map<int,company> bid_company;
@@ -95,3 +99,5 @@ extern int no_of_bids; // TODO: Check default initialization
 extern int no_of_companies; // TODO: Check default initialization
 extern int no_of_regions; // TODO: Check default initialization
 extern std::map<int,bid>::iterator mit;
+extern std::vector<int> bid_ids;
+extern std::vector<int>::iterator bid_it;
