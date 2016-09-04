@@ -41,27 +41,49 @@ void output_state_details(state s)
 
 bool check_collision(std::vector<int> v,int new_bid)
 {
-	std::map<int,bool> map;
+	// std::map<int,bool> map;
+
+	// if (new_bid >= 0)
+	// for (std::vector<int>::iterator i = bid_map[new_bid].set_of_regions.begin(); i != bid_map[new_bid].set_of_regions.end(); ++i)
+	// {
+	// 	map[*i] = true;
+	// }
+
+	// for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
+	// {
+	// 	for (std::vector<int>::iterator j = bid_map[*i].set_of_regions.begin(); j != bid_map[*i].set_of_regions.end(); ++j)
+	// 	{
+	// 		if(map.find(*j) != map.end())
+	// 			return false;
+	// 		else
+	// 			map[*j] = true;
+	// 	}
+	// }
+
+	// return true;
+
+	bool* arr = new bool[no_of_regions];
+
+	std::fill(arr,arr+no_of_regions,false);
 
 	if (new_bid >= 0)
 	for (std::vector<int>::iterator i = bid_map[new_bid].set_of_regions.begin(); i != bid_map[new_bid].set_of_regions.end(); ++i)
 	{
-		map[*i] = true;
-	}
+		arr[*i] = true;
+	}	
 
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
 	{
 		for (std::vector<int>::iterator j = bid_map[*i].set_of_regions.begin(); j != bid_map[*i].set_of_regions.end(); ++j)
 		{
-			if(map.find(*j) != map.end())
+			if(arr[*j])
 				return false;
 			else
-				map[*j] = true;
+				arr[*j] = true;
 		}
 	}
 
 	return true;
-
 }
 
 std::map<int,bool> start_state_occur;
@@ -439,28 +461,71 @@ void allocate::greedy_random_search(float inp_time, state start_state)
 			// std::cout<<"SWAP:\n";
 			
 
-			for (std::vector<int>::iterator i = current.remaining_companies.begin(); i != current.remaining_companies.end(); ++i)
-			{
-				for (std::vector<int>::iterator j = bid_company[*i].list_of_bids.begin(); (j != bid_company[*i].list_of_bids.end()); ++j)
-				{
-						if((check_collision(newstate.list_of_bids,*j)))
-						{
-							newstate.list_of_bids.push_back((*j));
-							if (newstate.get_cost() >= max_assign_cost - 1000)
-							{
-								max_assign_state = newstate;
-								max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), bid_map[*j].company), max_assign_state.remaining_companies.end());	
-								// max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (bid_map[(*i)].company)), max_assign_state.remaining_companies.end());	
-								max_assign_cost = max_assign_state.get_cost();
-								done = true;
-								// break;
-							}
-							// else
-							// {
-								newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((*j))), newstate.list_of_bids.end());	
-						}
-				}
-			}
+			// for (std::vector<int>::iterator i = current.remaining_companies.begin(); i != current.remaining_companies.end(); ++i)
+			// {
+			// 	for (std::vector<int>::iterator j = bid_company[*i].list_of_bids.begin(); (j != bid_company[*i].list_of_bids.end()); ++j)
+			// 	{
+			// 			if((check_collision(newstate.list_of_bids,*j)))
+			// 			{
+			// 				newstate.list_of_bids.push_back((*j));
+			// 				if (newstate.get_cost() >= max_assign_cost - 1000)
+			// 				{
+			// 					max_assign_state = newstate;
+			// 					max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), bid_map[*j].company), max_assign_state.remaining_companies.end());	
+			// 					// max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (bid_map[(*i)].company)), max_assign_state.remaining_companies.end());	
+			// 					max_assign_cost = max_assign_state.get_cost();
+			// 					done = true;
+			// 					// break;
+			// 				}
+			// 				// else
+			// 				// {
+			// 					newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((*j))), newstate.list_of_bids.end());	
+			// 			}
+			// 	}
+			// }
+//-------------------------------------------------------------------------------------
+			// for (std::vector<int>::iterator i = current.list_of_bids.begin(); i != current.list_of_bids.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++i)
+			// {
+			// 	newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), (*i)), newstate.list_of_bids.end());	
+
+			// 	int comp_id = bid_map[*i].company;
+				
+			// 	for (std::map<int,bid>::iterator j = bid_map.begin(); (j != bid_map.end())/*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
+			// 	{
+			// 		if((check_collision(newstate.list_of_bids,j->first)) && (((j->second).company == comp_id) || (find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company) != current.remaining_companies.end())) )
+			// 		{
+			// 			std::vector<int>::iterator it = find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company);
+			// 			if((*i != (j->first)) && (((j -> second).company == comp_id) || it != current.remaining_companies.end() ))
+			// 			{
+			// 				newstate.list_of_bids.push_back((j->first));
+			// 				if (newstate.get_cost() >= max_assign_cost - 1000)
+			// 				{
+			// 					max_assign_state = newstate;
+			// 					max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (bid_map[(j->first)].company)), max_assign_state.remaining_companies.end());	
+			// 					// max_assign_state.remaining_companies.push_back(bid_map[*i].company);
+			// 					max_assign_cost = max_assign_state.get_cost();
+			// 					done = true;
+			// 					// break;
+			// 				}
+			// 				// else
+			// 				// {
+			// 					newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((j->first))), newstate.list_of_bids.end());	
+			// 				// }
+			// 			}
+			// 		}
+			// 	}
+
+			// 	// if(done)
+			// 	// {
+			// 	// 	break;
+			// 	// }
+			// 	// else
+			// 	// {
+			// 		newstate.list_of_bids.push_back(*i);
+			// 	// }
+			// }
+
+//-------------------------------------------------------------------------------------
 
 			for (std::vector<int>::iterator i = current.list_of_bids.begin(); i != current.list_of_bids.end() /*&& difftime( time(0), start) <= time_fact * inp_time*/; ++i)
 			{
@@ -468,27 +533,64 @@ void allocate::greedy_random_search(float inp_time, state start_state)
 
 				int comp_id = bid_map[*i].company;
 				
-				for (std::map<int,bid>::iterator j = bid_map.begin(); (j != bid_map.end())/*&& difftime( time(0), start) <= time_fact * inp_time*/; ++j)
+				//for same company
+				for (std::vector<int>::iterator j = bid_company[comp_id].list_of_bids.begin(); j != bid_company[comp_id].list_of_bids.end(); ++j)
 				{
-					if((check_collision(newstate.list_of_bids,j->first)) && (((j->second).company == comp_id) || (find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company) != current.remaining_companies.end())) )
+					if(check_collision(newstate.list_of_bids,*j))
 					{
-						std::vector<int>::iterator it = find(current.remaining_companies.begin(),current.remaining_companies.end(),(j -> second).company);
-						if((*i != (j->first)) && (((j -> second).company == comp_id) || it != current.remaining_companies.end() ))
+						newstate.list_of_bids.push_back((*j));
+						if (newstate.get_cost() >= max_assign_cost - 1000)
 						{
-							newstate.list_of_bids.push_back((j->first));
+							max_assign_state = newstate;
+							// max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (bid_map[(j->first)].company)), max_assign_state.remaining_companies.end());	
+							// max_assign_state.remaining_companies.push_back(bid_map[*i].company);
+							max_assign_cost = max_assign_state.get_cost();
+							done = true;
+							// break;
+						}
+
+						newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((*j))), newstate.list_of_bids.end());	
+					}
+				}
+
+				for (std::vector<int>::iterator j = newstate.remaining_companies.begin(); j != newstate.remaining_companies.end(); ++j)
+				{
+					for (std::vector<int>::iterator k = bid_company[*j].list_of_bids.begin(); k != bid_company[*j].list_of_bids.end(); ++k)
+					{
+						if(check_collision(newstate.list_of_bids,*k))
+						{
+							newstate.list_of_bids.push_back((*k));
 							if (newstate.get_cost() >= max_assign_cost - 1000)
 							{
 								max_assign_state = newstate;
-								max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (bid_map[(j->first)].company)), max_assign_state.remaining_companies.end());	
-								// max_assign_state.remaining_companies.push_back(bid_map[*i].company);
+								max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (*j)), max_assign_state.remaining_companies.end());	
+								max_assign_state.remaining_companies.push_back(comp_id);
 								max_assign_cost = max_assign_state.get_cost();
 								done = true;
 								// break;
 							}
 							// else
 							// {
-								newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((j->first))), newstate.list_of_bids.end());	
-							// }
+
+							// for (std::vector<int>::iterator l = current.list_of_bids.begin(); l != current.list_of_bids.end(); ++)
+							// {
+								if(check_collision(newstate.list_of_bids,*i))
+								{
+									newstate.list_of_bids.push_back(*i);
+									if (newstate.get_cost() >= max_assign_cost - 1000)
+									{
+										max_assign_state = newstate;
+										max_assign_state.remaining_companies.erase(std::remove(max_assign_state.remaining_companies.begin(), max_assign_state.remaining_companies.end(), (*j)), max_assign_state.remaining_companies.end());	
+										// max_assign_state.remaining_companies.push_back(*j);
+										max_assign_cost = max_assign_state.get_cost();
+										done = true;
+										// break;
+									}		
+								// }
+
+									newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((*i))), newstate.list_of_bids.end());	
+								}
+								newstate.list_of_bids.erase(std::remove(newstate.list_of_bids.begin(), newstate.list_of_bids.end(), ((*k))), newstate.list_of_bids.end());	
 						}
 					}
 				}
@@ -503,6 +605,16 @@ void allocate::greedy_random_search(float inp_time, state start_state)
 				// }
 			}
 
+
+
+
+
+
+
+
+
+
+
 		// 	if(best_state.get_cost() <= max_assign_state.get_cost())
 		// 			best_state = max_assign_state;
 
@@ -514,7 +626,11 @@ void allocate::greedy_random_search(float inp_time, state start_state)
 			if(best_state.get_cost() <= max_assign_state.get_cost())
 					best_state = max_assign_state;
 
+			if(current.get_cost() != max_assign_state.get_cost())
 				current = max_assign_state;
+			else
+				current = get_random_state();
+				// current = get_random_neighbour(current);
 
 			if(!done)
 			{
@@ -877,7 +993,7 @@ void allocate::input()
 	int no_of_regions, no_of_bids, no_of_companies;
 	int k = 0;
 	ifstream in;
-	in.open("../A1/A1/benchmarks/1.txt");
+	in.open("../A1/A1/benchmarks/3.txt");
 
 	std::cout << "file opened\n";
 
