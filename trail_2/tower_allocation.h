@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <unordered_map>
 #include <fstream> // TODO: Check if necessary
 #include <cstdlib>
 #include <ctime>
@@ -9,9 +8,8 @@
 #include <string>
 #include <limits.h>
 #include <random>
-#include <math.h>
 #define max 10000
-//yo
+
 class bid
 {
 	public:
@@ -43,7 +41,7 @@ class state
 {
 	public:
 		std::vector<int> list_of_bids;
-		std::vector<int>/*std::unordered_map<int,bool>*/ remaining_companies;
+		std::vector<int>/*std::map<int,bool>*/ remaining_companies;
 
 		state()
 		{
@@ -57,7 +55,6 @@ class state
 		}
 
 		float get_cost();
-		float get_actual_cost();
 };
 
 class allocate
@@ -65,14 +62,12 @@ class allocate
 	public:
 		state best_state;
 		state get_start_state();
-		state get_random_state();
 		void search(float time,state start_state);
 		void greedy_search(float time,state start_state);
 		void greedy_random_search(float time,state start_state);
-		void sa_search(float time,state start_state);
 		state remove_collision(state input_state);
-		void input(char filename[]);
-		void output(state output_state, char filename[]);
+		void input();
+		void output(state output_state);
 
 		// allocate()
 		// {
@@ -81,10 +76,9 @@ class allocate
 };
 
 float random_fraction();
-state get_random_neighbour(state temp);
 
-extern std::unordered_map<int,bid> bid_map;
-extern std::unordered_map<int,company> bid_company;
+extern std::map<int,bid> bid_map;
+extern std::map<int,company> bid_company;
 
 extern float collision_cost; //TODO:some amount to tweak or infer
 
@@ -100,6 +94,6 @@ extern float input_time;
 extern int no_of_bids; // TODO: Check default initialization
 extern int no_of_companies; // TODO: Check default initialization
 extern int no_of_regions; // TODO: Check default initialization
-extern std::unordered_map<int,bid>::iterator mit;
+extern std::map<int,bid>::iterator mit;
 extern std::vector<int> bid_ids;
 extern std::vector<int>::iterator bid_it;
