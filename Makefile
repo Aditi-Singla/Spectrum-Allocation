@@ -1,14 +1,17 @@
+CC = g++
+CXXFLAGS = -std=c++11 -O3
+
 all: allocate.o main.o helpers.o
-	g++ -O3 allocate.o main.o helpers.o -o output
+	$(CC) $(CXXFLAGS) allocate.o main.o helpers.o -o output
 
 allocate.o: src/allocate.cpp src/tower_allocation.h
-	g++ -O3 -std=c++11 -c src/allocate.cpp
+	$(CC) $(CXXFLAGS) -c src/allocate.cpp
 
 main.o: src/main.cpp src/tower_allocation.h
-	g++ -O3 -std=c++11 -c src/main.cpp
+	$(CC) $(CXXFLAGS) -c src/main.cpp
 
 helpers.o: src/helpers.cpp src/tower_allocation.h
-	g++ -O3 -std=c++11 -c src/helpers.cpp
+	$(CC) $(CXXFLAGS) -c src/helpers.cpp
 
 clean:
 	rm -rf output
