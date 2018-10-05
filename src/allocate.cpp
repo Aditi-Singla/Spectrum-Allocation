@@ -4,8 +4,6 @@
 #include "tower_allocation.h"
 using namespace std;
 
-
-
 float random_fraction()
 {
 	// // // std::srand(std::time(0)); // use current time as seed for random generator

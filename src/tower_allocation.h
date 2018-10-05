@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-#include <fstream> // TODO: Check if necessary
+#include <fstream>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
@@ -11,7 +11,7 @@
 #include <random>
 #include <math.h>
 #define max 10000
-//yo
+
 class bid
 {
 	public:
